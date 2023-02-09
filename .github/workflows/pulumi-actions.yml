@@ -1,0 +1,51 @@
+name: Pulumi-Actions
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "iac/**"
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - "iac/**"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  skip-duplicate-actions:
+    name: Skip Duplicate Actions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fkirc/skip-duplicate-actions@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cancel_others: true
+          concurrent_skipping: never
+
+  pulumi-actions:
+    name: Pulumi-Automation-API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: stable
+
+      - name: Pulumi-Actions
+        uses: pulumi/actions@v4
+        with:
+          command: preview
+          diff: true
+          stack-name: test
+          cloud-url: file://~
+          work-dir: iac
