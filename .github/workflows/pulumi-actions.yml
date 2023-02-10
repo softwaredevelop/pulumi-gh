@@ -41,11 +41,17 @@ jobs:
         with:
           go-version: stable
 
+      - name: Download package dependencies
+        run: go mod download
+        working-directory: iac
+
       - name: Pulumi-Actions
         uses: pulumi/actions@v4
         with:
-          command: preview
-          diff: true
-          stack-name: test
           cloud-url: file://~
+          command: preview
+          comment-on-pr: true
+          diff: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          stack-name: test
           work-dir: iac
