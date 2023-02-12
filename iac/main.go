@@ -69,6 +69,16 @@ func main() {
 			return err
 		}
 
+		_, err = github.NewIssueLabel(ctx, "issueLabel3", &github.IssueLabelArgs{
+			Color:       pulumi.String("0A4DFE"),
+			Description: pulumi.String("This issue is related to docker dependencies"),
+			Name:        pulumi.String("docker dependencies3"),
+			Repository:  repository.Name,
+		})
+		if err != nil {
+			return err
+		}
+
 		ctx.Export("repository", repository.Name)
 		ctx.Export("repositoryUrl", repository.HtmlUrl)
 		ctx.Export("issueLabel1", issueLabel1.Name)
