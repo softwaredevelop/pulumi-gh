@@ -47,6 +47,7 @@ jobs:
 
       - name: Pulumi preview
         env:
+          GITHUB_OWNER: ${{ github.repository_owner }}
           PULUMI_CONFIG_PASSPHRASE: ""
           PULUMI_SKIP_UPDATE_CHECK: true
         run: |
@@ -54,6 +55,6 @@ jobs:
           pulumi stack init --stack=stack
           pulumi plugin install resource github
           pulumi config set github:token ${{ secrets.GITHUB_TOKEN }} --secret
-          pulumi config set github:owner ${{ github.repository_owner }} --secret
+          pulumi config set github:owner ${{ env.GITHUB_OWNER }} --secret
           pulumi preview --debug --diff --non-interactive
         working-directory: iac
