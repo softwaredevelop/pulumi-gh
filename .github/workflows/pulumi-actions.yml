@@ -47,7 +47,7 @@ jobs:
 
       - name: Pulumi-Actions
         env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
         uses: pulumi/actions@v4
         with:
           cloud-url: file://~
