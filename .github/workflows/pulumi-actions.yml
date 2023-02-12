@@ -56,5 +56,6 @@ jobs:
           diff: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           stack-name: test
+          target-dependents: true
           upsert: true
           work-dir: iac
