@@ -1,4 +1,4 @@
-name: Pulumi-Actions
+name: Pulumi
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Go
+      - name: Setup Go latest
         uses: actions/setup-go@v3
         with:
           go-version: stable
@@ -47,11 +47,15 @@ jobs:
 
       - name: Pulumi preview
         env:
-          PULUMI_SKIP_UPDATE_CHECK: true
+          GITHUB_OWNER: $GITHUB_REPOSITORY_OWNER
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULUMI_CONFIG_PASSPHRASE: ""
+          PULUMI_SKIP_UPDATE_CHECK: true
         run: |
           pulumi login --local
           pulumi stack init --stack=stack
           pulumi plugin install resource github
+          pulumi config set github:token $GITHUB_TOKEN --secret
+          pulumi config set github:owner $GITHUB_OWNER --secret
           pulumi preview --debug --diff --non-interactive
         working-directory: iac
