@@ -45,9 +45,17 @@ jobs:
         run: go mod download
         working-directory: iac
 
+      - name: Pulumi login local
+        env:
+          PULUMI_SKIP_UPDATE_CHECK: true
+        run: |
+          pulumi login --local
+          pulumi plugin install resource github
+        working-directory: iac
+
       - name: Pulumi-Actions
         env:
-          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+          PULUMI_CONFIG_PASSPHRASE: ""
         uses: pulumi/actions@v4
         with:
           cloud-url: file://~
@@ -56,6 +64,5 @@ jobs:
           diff: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           stack-name: test
-          target-dependents: true
           upsert: true
           work-dir: iac
