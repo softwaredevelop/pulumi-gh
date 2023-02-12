@@ -28,7 +28,7 @@ jobs:
           concurrent_skipping: never
 
   pulumi-actions:
-    name: Pulumi-Automation-API
+    name: Pulumi
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -45,18 +45,12 @@ jobs:
         run: go mod download
         working-directory: iac
 
-      - name: Pulumi login local
+      - name: Pulumi preview
         env:
           PULUMI_SKIP_UPDATE_CHECK: true
         run: |
           pulumi login --local
+          pulumi stack init --stack=stack
           pulumi plugin install resource github
-        working-directory: iac
-
-      - name: Automation up
-        env:
-          PULUMI_SKIP_UPDATE_CHECK: true
-          PULUMI_CONFIG_PASSPHRASE: ""
-        run: |
           pulumi preview --debug --diff --non-interactive
         working-directory: iac
